@@ -19,86 +19,75 @@ export default function ProfilePage() {
   const [banner, setBanner] = useState("");
   const [followers, setFollowers] = useState(0);
   const [following, setFollowing] = useState(0);
+  const [bio, setBio] = useState("");
   const router = useRouter();
 
-  const [bio, setBio] = useState("");
-
   useEffect(() => {
-    console.log("🟢 Username détecté :", username); // 🔥 Voir si username est bien récupéré
-  
-    let token = localStorage.getItem("token");
-  
-    if (!token) {
-      token = sessionStorage.getItem("tempToken");
-      if (token) {
-        localStorage.setItem("token", token);
-      }
-    }
-  
-    if (!token) {
-      console.log("⚠️ Aucun token trouvé, redirection vers login.");
-      router.push("/auth/login");
-      return;
-    }
-  
     const fetchUserData = async () => {
-      try {
-        const res = await fetch(`/api/profile/${username}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-  
-        console.log("🔍 API /profile/{username} status :", res.status); // 🔥 Vérifier la réponse API
-  
-        if (!res.ok) {
-          console.error("❌ Erreur API Profil :", res.status);
-          router.push("/");
-          return;
-        }
-  
-        const data = await res.json();
-        setUser(data.user);
-      } catch (error) {
-        console.error("❌ Erreur serveur :", error);
-        router.push("/");
+      const token = localStorage.getItem("token");
+      if (!token) {
+        router.push("/auth/login");
+        return;
       }
-    };
-  
-    fetchUserData();
-  }, [username, router]);
-  
 
+      const res = await fetch("/api/profile", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (!res.ok) {
+        router.push("/auth/login");
+        return;
+      }
+
+      const data = await res.json();
+      setUser(data.user);
+      setName(data.user.name || "");
+      setUsername(data.user.username || "");
+      setProfilePicture(data.user.profilePicture || "");
+      setBanner(data.user.banner || "");
+      setBio(data.user.bio || ""); // 🔥 Ajout de la bio
+      setFollowers(data.user.followers || 0);
+      setFollowing(data.user.following || 0);
+    };
+
+    fetchUserData();
+  }, [router]);
 
   const handleProfilePictureChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
     const reader = new FileReader();
-    reader.onloadend = () => {
-      setProfilePicture(reader.result); // Stocker l’image en base64
-    };
     reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      setProfilePicture(reader.result);
+    };
   };
-  
-  
 
   const handleBannerChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
     const reader = new FileReader();
-    reader.onloadend = () => {
-      setBanner(reader.result); // Stocker l’image en base64
-    };
     reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      setBanner(reader.result);
+    };
   };
-  
-  
-
-
 
   const handleUpdateProfile = async () => {
     const token = localStorage.getItem("token");
-  
+
+    const body = JSON.stringify({
+      profilePicture,
+      banner,
+      name,
+      username,
+      bio, // 🔥 Ajout de la bio
+    });
+
+    console.log("📤 Données envoyées à /api/profile/update :", body); // 🔥 Vérifier ce qui est envoyé
+
     const res = await fetch("/api/profile/update", {
       method: "PUT",
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
@@ -109,20 +98,44 @@ export default function ProfilePage() {
         username,
       }),
     });
-  
+
     if (res.ok) {
       const data = await res.json();
-      setUser(data.user); // Met à jour l'affichage
-      setIsEditing(false); // Ferme la modale après mise à jour
+      setUser(data.user);
+      setIsEditing(false);
     } else {
-      console.error("❌ Erreur lors de la mise à jour :", data.message);
+      console.error("Erreur lors de la mise à jour du profil");
     }
   };
-  
-  
-  
-  
-  
+
+  // Ajouter un tweet avec la date et l'heure
+  const addTweet = (newTweet) => {
+    const tweetWithDate = {
+      ...newTweet,
+      id: Date.now(),
+      createdAt: new Date().toLocaleString("fr-FR", { dateStyle: "short", timeStyle: "short" }),
+    };
+    setTweets([tweetWithDate, ...tweets]);
+  };
+
+  // Supprimer un tweet
+  const deleteTweet = (id) => {
+    setTweets(tweets.filter(tweet => tweet.id !== id));
+  };
+
+  // Modifier un tweet
+  const startEditingTweet = (tweet) => {
+    setEditingTweet(tweet);
+    setNewTweetText(tweet.text);
+  };
+
+  const saveEditedTweet = () => {
+    setTweets(tweets.map(tweet => 
+      tweet.id === editingTweet.id ? { ...tweet, text: newTweetText } : tweet
+    ));
+    setEditingTweet(null);
+    setNewTweetText("");
+  };
 
   return (
     <div className={styles.profilePage}>
@@ -196,29 +209,29 @@ export default function ProfilePage() {
 
       <SearchBar />
 
-      {isEditing && (
+       {/* ✅ Modale pour modifier le profil */}
+       {isEditing && (
         <div className={styles.modal} onClick={() => setIsEditing(false)}>
           <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
             <h2>Modifier le profil</h2>
             <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Nom" />
             <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Identifiant" />
-            
+            <textarea value={bio} onChange={(e) => setBio(e.target.value)} placeholder="Bio"></textarea> {/* 🔥 Champ de bio */}
+
             <label>Photo de profil</label>
             <input type="file" accept="image/*" onChange={handleProfilePictureChange} />
 
             <label>Bannière</label>
             <input type="file" accept="image/*" onChange={handleBannerChange} />
-            
+
             <button onClick={handleUpdateProfile} className={styles.saveButton}>
-          Enregistrer
-        </button>
+              Enregistrer
+            </button>
 
             <button onClick={() => setIsEditing(false)}>Annuler</button>
           </div>
         </div>
       )}
-
-
     </div>
   );
 }
