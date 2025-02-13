@@ -13,24 +13,22 @@ export async function PUT(req) {
     const token = authHeader.split(" ")[1];
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    const body = await req.json();
-    console.log("🔍 Données reçues dans API update :", body); // 🔥 Voir ce qui arrive
-
-    const { profilePicture, banner, name, username } = body;
-
-    if (!profilePicture && !banner && !name && !username) {
-      return NextResponse.json({ message: "Aucune donnée fournie pour la mise à jour" }, { status: 400 });
-    }
+    const { profilePicture, banner, name, username, bio } = await req.json();
+    
+    console.log("🔍 Données reçues pour mise à jour :", { profilePicture, banner, name, username, bio });
 
     const user = await User.findById(decoded.userId);
     if (!user) return NextResponse.json({ message: "Utilisateur introuvable" }, { status: 404 });
 
-    if (profilePicture) user.profilePicture = profilePicture;
-    if (banner) user.banner = banner;
-    if (name) user.name = name;
-    if (username) user.username = username;
+    if (profilePicture !== undefined) user.profilePicture = profilePicture;
+    if (banner !== undefined) user.banner = banner;
+    if (name !== undefined) user.name = name;
+    if (username !== undefined) user.username = username;
+    if (bio !== undefined) user.bio = bio;  // 🔥 Vérification pour bien enregistrer la bio
 
     await user.save();
+    
+    console.log("✅ Profil mis à jour :", user);
 
     return NextResponse.json({ message: "Profil mis à jour", user }, { status: 200 });
   } catch (error) {
