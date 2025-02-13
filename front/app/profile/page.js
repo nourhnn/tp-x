@@ -23,35 +23,48 @@ export default function ProfilePage() {
   const router = useRouter();
 
   useEffect(() => {
+    let token = localStorage.getItem("token");
+
+    if (!token) {
+      token = sessionStorage.getItem("tempToken");
+      if (token) {
+        localStorage.setItem("token", token);
+      }
+    }
+
+    if (!token) {
+      console.log("⚠️ Aucun token trouvé, redirection vers login.");
+      router.push("/auth/login");
+      return;
+    }
+
     const fetchUserData = async () => {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        router.push("/auth/login");
-        return;
+      try {
+        const res = await fetch(`/api/profile/${username}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (!res.ok) {
+          console.error("❌ Erreur API Profil :", res.status);
+          router.push("/");
+          return;
+        }
+
+        const data = await res.json();
+        setUser(data.user);
+        setName(data.user.name || "");
+        setUsername(data.user.username || "");
+        setProfilePicture(data.user.profilePicture || "");
+        setBanner(data.user.banner || "");
+        setBio(data.user.bio || ""); // 🔥 Ajout de la bio
+      } catch (error) {
+        console.error("❌ Erreur serveur :", error);
+        router.push("/");
       }
-
-      const res = await fetch("/api/profile", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      if (!res.ok) {
-        router.push("/auth/login");
-        return;
-      }
-
-      const data = await res.json();
-      setUser(data.user);
-      setName(data.user.name || "");
-      setUsername(data.user.username || "");
-      setProfilePicture(data.user.profilePicture || "");
-      setBanner(data.user.banner || "");
-      setBio(data.user.bio || ""); // 🔥 Ajout de la bio
-      setFollowers(data.user.followers || 0);
-      setFollowing(data.user.following || 0);
     };
 
     fetchUserData();
-  }, [router]);
+  }, [username, router]);
 
   const handleProfilePictureChange = (e) => {
     const file = e.target.files[0];
@@ -91,12 +104,7 @@ export default function ProfilePage() {
     const res = await fetch("/api/profile/update", {
       method: "PUT",
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-      body: JSON.stringify({
-        profilePicture,
-        banner,
-        name,
-        username,
-      }),
+      body: body,
     });
 
     if (res.ok) {
@@ -108,7 +116,6 @@ export default function ProfilePage() {
     }
   };
 
-  // Ajouter un tweet avec la date et l'heure
   const addTweet = (newTweet) => {
     const tweetWithDate = {
       ...newTweet,
@@ -118,12 +125,10 @@ export default function ProfilePage() {
     setTweets([tweetWithDate, ...tweets]);
   };
 
-  // Supprimer un tweet
   const deleteTweet = (id) => {
     setTweets(tweets.filter(tweet => tweet.id !== id));
   };
 
-  // Modifier un tweet
   const startEditingTweet = (tweet) => {
     setEditingTweet(tweet);
     setNewTweetText(tweet.text);
@@ -176,7 +181,6 @@ export default function ProfilePage() {
           </button>
         </div>
 
-        {/* Liste des tweets postés */}
         <div className={styles.tweetsContainer}>
           {tweets.length === 0 ? (
             <p>Aucun Miaou pour l'instant</p>
@@ -208,8 +212,7 @@ export default function ProfilePage() {
       </div>
 
       <SearchBar />
-
-       {/* ✅ Modale pour modifier le profil */}
+      
        {isEditing && (
         <div className={styles.modal} onClick={() => setIsEditing(false)}>
           <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>

@@ -36,9 +36,7 @@ export default function Sidebar({ onNewTweet }) {
 
   return (
     <div className={styles.sidebar}>
-      <Link href="/">
-        <img src={logo} alt="MiaouX Logo" className={styles.logo} />
-      </Link>
+        <img src="@/app/logo.png" alt="MiaouX Logo" className={styles.logo} />
       <nav className={styles.navLinks}>
         <Link href="/">🏠 Home</Link>
         <Link href="/messages">📩 Messages</Link>

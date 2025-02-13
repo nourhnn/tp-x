@@ -67,6 +67,7 @@ export default function UserProfile() {
           <div>
             <h1 className={styles.profileName}>{user.name}</h1>
             <p className={styles.profileUsername}>@{user.username}</p>
+            <p className={styles.profileBio}>{user.bio}</p> {/* 🔥 Affichage de la bio */}
             <p className={styles.profileJoined}>
               📅 Joined {user?.createdAt ? new Date(user.createdAt).toLocaleString("en-US", { month: "long", year: "numeric" }) : "Date inconnue"}
             </p>
