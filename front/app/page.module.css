@@ -1,130 +1,3 @@
-/*--------------------------------------ACCUEIL-------------------------------------*/
-
-/* Style général */
-.page {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background-color: black;
-  color: white;
-  padding: 20px;
-}
-
-/* Conteneur principal */
-.container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 90%;
-  max-width: 1300px;
-  gap: 50px;
-}
-
-/* Logo */
-.logoContainer {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-}
-
-.logo {
-  width: 100%;
-  max-width: 400px;
-  height: auto;
-}
-
-/* Contenu à droite */
-.content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center; /* Garde tout centré */
-  text-align: center;
-}
-
-/* Grand texte aligné à gauche */
-.tagline {
-  font-size: 62px;
-  font-weight: bold;
-  align-self: flex-start; /* Aligne uniquement le texte à gauche */
-  text-align: left;
-  width: 100%;
-  margin-bottom: 40px;
-}
-
-/* Boutons */
-.authButtons {
-  display: flex;
-  flex-direction: column;
-  align-items: center; /* Garde les boutons centrés */
-  gap: 20px;
-}
-
-/* Boutons stylés */
-.button {
-  background-color: white;
-  color: black;
-  border: none;
-  padding: 15px 30px;
-  font-size: 20px;
-  font-weight: bold;
-  border-radius: 8px;
-  cursor: pointer;
-  width: 280px;
-}
-
-.button:hover {
-  background-color: gray;
-}
-
-/* Séparateur "OU" */
-.separator {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  position: relative;
-}
-
-.separator::before,
-.separator::after {
-  content: "";
-  flex: 1;
-  height: 1px;
-  background-color: gray;
-  margin: 0 10px;
-}
-
-.separator span {
-  font-size: 14px;
-  font-weight: bold;
-  color: white;
-}
-
-/* 🌍 Responsive pour mobiles */
-@media (max-width: 1024px) {
-  .container {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    gap: 30px;
-  }
-
-  .tagline {
-    align-self: center; /* Recentre le texte sur mobile */
-    text-align: center;
-  }
-
-  .button {
-    width: 250px;
-  }
-}
-
-
-
-
-
 /*--------------------------------------SIGNUP-------------------------------------*/
 
 
@@ -364,59 +237,128 @@
 
 
 
-/*--------------------------------PROFILE---------------------------------*/
-/* 🌌 Structure générale */
-.layout {
+/*--------------------------------------ACCUEIL-------------------------------------*/
+
+/* Style général */
+.page {
   display: flex;
-  justify-content: space-between;
-  max-width: 1200px;
-  margin: auto;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: black;
+  color: white;
+  padding: 20px;
 }
 
-/* 📌 Sidebar (Gauche) */
-.sidebar {
-  width: 300px;
-  height: 100vh;
-  position: fixed;
-  left: 0;
-  top: 0;
-  background: black;
-  padding: 20px;
+/* Conteneur principal */
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 90%;
+  max-width: 1300px;
+  gap: 50px;
+}
+
+/* Logo */
+.logoContainer {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.logo {
+  width: 100%;
+  max-width: 400px;
+  height: auto;
+}
+
+/* Contenu à droite */
+.content {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-}
-
-.sidebar a {
-  color: white;
-  text-decoration: none;
-  font-size: 18px;
-  padding: 10px;
-  border-radius: 10px;
-}
-
-.sidebar a:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-}
-
-.logoutButton {
-  background-color: transparent;
-  color: white;
-  border: 1px solid white;
-  padding: 10px;
-  border-radius: 20px;
-  cursor: pointer;
-  width: 100%;
-  margin-top: 10px;
+  align-items: center;
   text-align: center;
 }
 
-.logoutButton:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+/* Grand texte aligné à gauche */
+.tagline {
+  font-size: 62px;
+  font-weight: bold;
+  align-self: flex-start;
+  text-align: left;
+  width: 100%;
+  margin-bottom: 40px;
 }
 
+/* Boutons */
+.authButtons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
 
+/* Boutons stylés */
+.button {
+  background-color: white;
+  color: black;
+  border: none;
+  padding: 15px 30px;
+  font-size: 20px;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  width: 280px;
+}
 
+.button:hover {
+  background-color: gray;
+}
+
+/* Séparateur "OU" */
+.separator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  position: relative;
+}
+
+.separator::before,
+.separator::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background-color: gray;
+  margin: 0 10px;
+}
+
+.separator span {
+  font-size: 14px;
+  font-weight: bold;
+  color: white;
+}
+
+/* 🌍 Responsive pour mobiles */
+@media (max-width: 1024px) {
+  .container {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 30px;
+  }
+
+  .tagline {
+    align-self: center;
+    text-align: center;
+  }
+
+  .button {
+    width: 250px;
+  }
+}
 
 /*---------------- 🔍 Search (Droite)----------------- */
 .searchContainer {
@@ -485,16 +427,57 @@
 }
 
 
-/*------------- 🎭 Profil (Milieu) -----------*/
-/* 🔹 Mise en page globale */
+/*--------------------------------PROFILE---------------------------------*/
+
+/* 🌌 Structure générale */
 .layout {
   display: flex;
   justify-content: space-between;
-  width: 100%;
-  height: 100vh;
+  max-width: 1200px;
+  margin: auto;
 }
 
+/* 📌 Sidebar (Gauche) */
+.sidebar {
+  width: 250px;
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+  background: black;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
 
+.sidebar a {
+  color: white;
+  text-decoration: none;
+  font-size: 18px;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.sidebar a:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.logoutButton {
+  background-color: transparent;
+  color: white;
+  border: 1px solid white;
+  padding: 10px;
+  border-radius: 20px;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 10px;
+  text-align: center;
+}
+
+.logoutButton:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
 
 /* 🔹 Contenu du profil */
 .profileContent {
@@ -503,7 +486,7 @@
   color: white;
   background-color: black;
   max-width: 800px;
-  margin-left: 300px; /* Décalage pour la sidebar */
+  margin-left: 300px;
 }
 
 /* 🔹 Bannière */
@@ -559,6 +542,32 @@
   font-size: 16px;
 }
 
+/* 💬 Section des tweets */
+.tweetsContainer {
+  margin-top: 20px;
+  background-color: #222;
+  padding: 15px;
+  border-radius: 10px;
+}
+
+.tweet {
+  padding: 10px;
+  border-bottom: 1px solid gray;
+}
+
+.tweet:last-child {
+  border-bottom: none;
+}
+
+.tweetImage {
+  width: 100%;
+  max-height: 300px;
+  object-fit: cover;
+  margin-top: 10px;
+  border-radius: 8px;
+}
+
+/*---------------- 🔍 Pop-up de modification de profil ----------------- */
 
 .modal {
   position: fixed;
@@ -605,6 +614,129 @@
   background-color: #333;
   color: white;
 }
+/*---------------- 🔍 Pop-up de création de tweet ----------------- */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
+.modalContent {
+  background: black;
+  padding: 20px;
+  border-radius: 10px;
+  width: 400px;
+  text-align: center;
+}
 
+.tweetInput {
+  width: 100%;
+  height: 100px;
+  margin: 10px 0;
+  border: 1px solid white;
+  background: #222;
+  color: white;
+  padding: 10px;
+  border-radius: 8px;
+}
 
+.tweetInput::placeholder {
+  color: #888;
+}
+
+.imagePreview {
+  max-width: 100%;
+  max-height: 300px;
+  border-radius: 8px;
+  margin-top: 10px;
+}
+
+.postButton {
+  background-color: #ffffff;
+  color: #000000;
+  border: none;
+  padding: 10px 20px;
+  font-size: 18px;
+  border-radius: 20px;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 10px;
+  transition: 0.5s;
+}
+
+.postButton:hover {
+  background-color: #000000;
+  border: solid 1px #ffffff;
+  color: #ffffff;
+  transition: 0.5s;
+}
+
+.closeButton {
+  background-color: #444;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.closeButton:hover {
+  background-color: #666;
+}
+
+/* 🔹 Bouton Modifier */
+.deleteButton {
+  background-color: transparent;
+  color: white;
+  border: 1px solid white;
+  padding: 8px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: 0.5s;
+}
+
+.deleteButton:hover {
+  background-color: rgb(149, 12, 12);
+  transition: 0.5s;
+}
+
+.saveButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: transparent;
+  color: white;
+  border: 1px solid white;
+  padding: 8px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: 0.5s;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .profileContent {
+    margin-left: 0;
+    padding: 10px;
+  }
+
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+    flex-direction: row;
+    justify-content: space-around;
+  }
+
+  .modalContent {
+    width: 90%;
+  }
+}
