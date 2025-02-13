@@ -21,8 +21,8 @@ export default function SearchBar() {
     }
   };
 
-  const handleProfileClick = (username) => {
-    console.log("🔎 Redirection vers :", `/profile/${username}`);
+  const handleUserClick = (username) => {
+    console.log("Token avant redirection :", localStorage.getItem("token"));
     router.push(`/profile/${username}`);
   };
   
