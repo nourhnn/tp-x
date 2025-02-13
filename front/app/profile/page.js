@@ -55,18 +55,17 @@ export default function ProfilePage() {
     fetchUserData();
   }, [router]);
 
-  // ✅ Gestion du changement de photo de profil
   const handleProfilePictureChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
   
     const reader = new FileReader();
     reader.readAsDataURL(file);
-    reader.onloadend = async () => {
+    reader.onloadend = () => {
       setProfilePicture(reader.result);
-      await handleUpdateProfile(); // 🔥 Envoie directement l’image à l’API
     };
   };
+  
   
 
   const handleBannerChange = (e) => {
@@ -75,37 +74,38 @@ export default function ProfilePage() {
   
     const reader = new FileReader();
     reader.readAsDataURL(file);
-    reader.onloadend = async () => {
+    reader.onloadend = () => {
       setBanner(reader.result);
-      await handleUpdateProfile(); // 🔥 Envoie directement l’image à l’API
     };
   };
+  
   
 
 
 
-  const handleUpdateProfile = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onloadend = async () => {
-      const base64Image = reader.result;
-
-      const token = localStorage.getItem("token");
-      const res = await fetch("/api/profile/update", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ profilePicture: base64Image }),
-      });
-
-      if (res.ok) {
-        const data = await res.json();
-        setUser(data.user); // Met à jour l'affichage avec la nouvelle image
-      }
-    };
+  const handleUpdateProfile = async () => {
+    const token = localStorage.getItem("token");
+  
+    const res = await fetch("/api/profile/update", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+      body: JSON.stringify({
+        profilePicture,
+        banner,
+        name,
+        username,
+      }),
+    });
+  
+    if (res.ok) {
+      const data = await res.json();
+      setUser(data.user); // Met à jour l'affichage
+      setIsEditing(false); // Ferme la modale après mise à jour
+    } else {
+      console.error("Erreur lors de la mise à jour du profil");
+    }
   };
+  
   
   
   
@@ -170,6 +170,10 @@ export default function ProfilePage() {
             <label>Bannière</label>
             <input type="file" accept="image/*" onChange={handleBannerChange} />
             
+            <button onClick={handleUpdateProfile} className={styles.saveButton}>
+          Enregistrer
+        </button>
+
             <button onClick={() => setIsEditing(false)}>Annuler</button>
           </div>
         </div>

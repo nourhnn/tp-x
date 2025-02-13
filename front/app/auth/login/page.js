@@ -15,26 +15,28 @@ export default function LoginPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-  
+
     const res = await fetch("/api/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
     });
-  
+
     const data = await res.json();
-    if (!res.ok) {
+    console.log("🔍 Réponse API Login :", data);
+
+    if (!res.ok || !data.token) {
       setError(data.message || "Erreur inconnue");
       return;
     }
-  
+
     localStorage.setItem("token", data.token);
-  
-    console.log("✅ Connexion réussie, redirection vers /profile");
-    router.push("/profile");  // 🔥 Assure-toi que c'est bien une string
+    sessionStorage.setItem("tempToken", data.token); // 🔥 Stockage temporaire
+
+    console.log("✅ Token stocké :", localStorage.getItem("token"));
+
+    router.push("/profile");
   };
-  
-  
 
   return (
     <div className={styles.loginPage}>
@@ -48,12 +50,6 @@ export default function LoginPage() {
         <input type="password" placeholder="Mot de passe" className={styles.loginInput} value={password} onChange={(e) => setPassword(e.target.value)} required />
         <button type="submit" className={styles.loginButton}>Connexion</button>
       </form>
-
-      <div className={styles.separator}>
-        <span>ou</span>
-      </div>
-
-      <button className={styles.backButton} onClick={() => router.push("/")}>Revenir à la page d'accueil</button>
     </div>
   );
 }
