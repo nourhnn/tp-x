@@ -24,7 +24,6 @@ export default function ProfilePage() {
   const [followers, setFollowers] = useState(0);
   const [following, setFollowing] = useState(0);
   const router = useRouter();
-
   const [bio, setBio] = useState("");
 
 useEffect(() => {
