@@ -1,5 +1,5 @@
 import connectDB from "../../lib/mongodb";
-import Article from "../../models/article";
+import Article from "../models/article";
 
 
 export default async function handler(req, res) {

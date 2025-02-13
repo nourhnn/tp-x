@@ -13,15 +13,15 @@ export default function Home() {
   useEffect(() => {
     const bgAudio = new Audio("/background-music.mp3"); // Mets ton fichier ici
     bgAudio.loop = true; // Son en boucle
-    bgAudio.volume = 0.05; // Démarre immédiatement avec un volume bas
+    bgAudio.volume = 0.0; // Démarre immédiatement avec un volume bas
     setAudio(bgAudio);
 
     // Jouer immédiatement avec un fade-in rapide
     bgAudio.play().then(() => {
       let volume = 0.02; // Volume de départ bas
       const fadeIn = setInterval(() => {
-        if (volume < 0.04) { // Volume maximum encore plus doux
-          volume += 0.002;
+        if (volume < 0.00) { // Volume maximum encore plus doux
+          volume += 0.000;
           bgAudio.volume = volume;
         } else {
           clearInterval(fadeIn);
