@@ -11,6 +11,7 @@ const UserSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now },
   following: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
   followers: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+  bio: { type: String, default: "" }, // ✅ Ajout de la bio
 });
 
 const User = mongoose.models.User || mongoose.model("User", UserSchema);

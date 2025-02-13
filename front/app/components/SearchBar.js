@@ -39,7 +39,7 @@ export default function SearchBar() {
       {results.length > 0 && (
         <div className={styles.searchResults}>
           {results.map((user) => (
-            <div key={user.username} className={styles.searchItem} onClick={() => handleProfileClick(user.username)}>
+            <div key={user.username} className={styles.searchItem} onClick={() => handleUserClick(user.username)}>
               <img src={user.profilePicture} alt={user.name} className={styles.searchProfilePic} />
               <div>
                 <p className={styles.searchName}>{user.name}</p>
