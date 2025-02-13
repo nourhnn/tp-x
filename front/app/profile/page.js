@@ -27,49 +27,49 @@ export default function ProfilePage() {
 
   const [bio, setBio] = useState("");
 
-  useEffect(() => {
-    console.log("🟢 Username détecté :", username); // 🔥 Voir si username est bien récupéré
-  
-    let token = localStorage.getItem("token");
-  
-    if (!token) {
-      token = sessionStorage.getItem("tempToken");
-      if (token) {
-        localStorage.setItem("token", token);
-      }
+useEffect(() => {
+  let token = localStorage.getItem("token");
+
+  if (!token) {
+    token = sessionStorage.getItem("tempToken");
+    if (token) {
+      localStorage.setItem("token", token);
     }
-  
-    if (!token) {
-      console.log("⚠️ Aucun token trouvé, redirection vers login.");
-      router.push("/auth/login");
-      return;
-    }
-  
-    const fetchUserData = async () => {
-      try {
-        const res = await fetch(`/api/profile/${username}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-  
-        console.log("🔍 API /profile/{username} status :", res.status); // 🔥 Vérifier la réponse API
-  
-        if (!res.ok) {
-          console.error("❌ Erreur API Profil :", res.status);
-          router.push("/");
-          return;
-        }
-  
-        const data = await res.json();
-        setUser(data.user);
-      } catch (error) {
-        console.error("❌ Erreur serveur :", error);
+  }
+
+  if (!token) {
+    console.log("⚠️ Aucun token trouvé, redirection vers login.");
+    router.push("/auth/login");
+    return;
+  }
+
+  const fetchUserData = async () => {
+    try {
+      const res = await fetch(`/api/profile/${username}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (!res.ok) {
+        console.error("❌ Erreur API Profil :", res.status);
         router.push("/");
+        return;
       }
-    };
-  
-    fetchUserData();
-  }, [username, router]);
-  
+
+      const data = await res.json();
+      setUser(data.user);
+      setName(data.user.name || "");
+      setUsername(data.user.username || "");
+      setProfilePicture(data.user.profilePicture || "");
+      setBanner(data.user.banner || "");
+      setBio(data.user.bio || ""); // 🔥 Ajout de la bio
+    } catch (error) {
+      console.error("❌ Erreur serveur :", error);
+      router.push("/");
+    }
+  };
+
+  fetchUserData();
+}, [username, router]);
 
 
   const handleProfilePictureChange = (e) => {
