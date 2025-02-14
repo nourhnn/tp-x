@@ -366,6 +366,7 @@
   position: fixed;
   right: 20px;
   top: 20px;
+  background-color: black;
 }
 
 .searchBox {
@@ -427,6 +428,49 @@
 }
 
 
+.selectedProfile {
+  display: flex;
+  align-items: center;
+  background-color: #222;
+  padding: 10px;
+  border-radius: 10px;
+  margin-top: 10px;
+  gap: 10px;
+}
+
+.selectedProfilePic {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+
+.selectedProfileName {
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+}
+
+.selectedProfileUsername {
+  font-size: 14px;
+  color: gray;
+}
+
+.removeProfileButton {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+  margin-left: auto;
+  transition: transform 0.2s ease-in-out;
+}
+
+.removeProfileButton:hover {
+  transform: scale(1.2);
+  color: red;
+}
+
+
 /*--------------------------------PROFILE---------------------------------*/
 
 /* 🌌 Structure générale */
@@ -435,11 +479,12 @@
   justify-content: space-between;
   max-width: 1200px;
   margin: auto;
+  background-color: #000;
 }
 
 /* 📌 Sidebar (Gauche) */
 .sidebar {
-  width: 250px;
+  width: 300px;
   height: 100vh;
   position: fixed;
   left: 0;
@@ -448,43 +493,111 @@
   padding: 20px;
   display: flex;
   flex-direction: column;
+  justify-content: space-between; /* Espace entre le haut et le bas */
+}
+.sidebar .topSection {
+  display: flex;
+  flex-direction: column;
   align-items: flex-start;
+
 }
 
-.sidebar a {
-  color: white;
-  text-decoration: none;
-  font-size: 18px;
-  padding: 10px;
-  border-radius: 10px;
+.sidebar .topSection a {
+  margin: 0; /* Supprime les marges */
+  padding: 10px 0; /* Ajuste l’espacement si nécessaire */
+  display: block; /* S'assure que chaque élément prend toute la largeur */
+  width: 100%; /* Facultatif pour forcer l'alignement */
+  font-size: 1.3rem;
 }
+
+
+.sidebar .bottomSection {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px; /* Espacement entre les boutons */
+  margin-top: auto; /* Pousse cette section en bas */
+}
+
+
 
 .sidebar a:hover {
   background-color: rgba(255, 255, 255, 0.1);
+  
 }
 
-.logoutButton {
-  background-color: transparent;
-  color: white;
-  border: 1px solid white;
+.logoSidebar{
+  width: 100%;
+  max-width: 100px;
+  height: auto;
+  /*Centrer le logo */
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+}
+
+.button {
+  background-color: white;
+  color: black;
+  border: none;
   padding: 10px;
   border-radius: 20px;
   cursor: pointer;
   width: 100%;
-  margin-top: 10px;
   text-align: center;
 }
 
-.logoutButton:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+.button:hover {
+  background-color: rgba(255, 255, 255, 0.8);
 }
 
-/* 🔹 Contenu du profil */
+.logoutButton {
+  background-color: #ffffff;
+  color: #000000;
+  border: none;
+  padding: 10px 20px;
+  font-size: 18px;
+  border-radius: 20px;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 10px;
+  transition: 0.5s;
+}
+
+.logoutButton:hover {
+  background-color: #000000;
+  border: solid 1px #ffffff;
+  color: #ffffff;
+  transition: 0.5s;
+}
+
+.postButton {
+  background-color: #000000;
+  color: #ffffff;
+  border: 2px solid #ffffff;
+  padding: 10px 20px;
+  font-size: 18px;
+  border-radius: 20px;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 10px;
+  transition: 0.5s;
+}
+
+.postButton:hover {
+  background-color: #ffffff;
+  border: solid 1px #000000;
+  color: #000000;
+  transition: 0.5s;
+}
+
+
+/* 🔹------------------------- Contenu du profil */
 .profileContent {
   flex: 1;
   padding: 20px;
   color: white;
-  background-color: black;
+  background-color: rgb(0, 0, 0);
   max-width: 800px;
   margin-left: 300px;
 }
@@ -513,7 +626,7 @@
   border: 4px solid black;
   position: absolute;
   top: 140px;
-  left: 50%;
+  left: 29%;
   transform: translateX(-50%);
 }
 
@@ -534,15 +647,77 @@
   cursor: pointer;
 }
 
-/* 🔹 Stats (Abonnés/Abonnements) */
-.profileStats {
+
+
+.profileHeader {
   display: flex;
-  gap: 15px;
-  margin-top: 10px;
-  font-size: 16px;
+  justify-content: space-between; /* Éloigne le bouton du texte */
+  align-items: flex-start; /* Alignement du texte en haut */
+  padding: 15px;
+  margin-top: 30px; /* Abaisse le texte */
 }
 
-/* 💬 Section des tweets */
+.profileHeader div {
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Ajoute un espacement entre chaque élément */
+}
+
+.profileName {
+  font-size: 22px;
+  font-weight: bold;
+  color: white; /* Nom en blanc */
+}
+
+.profileUsername {
+  font-size: 16px;
+  color: #8899a6; /* Texte en gris (Twitter-like) */
+}
+
+.profileBio {
+  font-size: 16px;
+  color: #ffffff; /* Bio en gris */
+}
+
+.profileJoined {
+  font-size: 16px;
+  color: #8899a6; /* Date en gris */
+}
+
+.profileStats {
+  display: flex;
+  margin-top: 5px;
+  color: #8899a6;
+}
+
+.profileStats strong {
+  font-size: 16px;
+  color: white; /* Followers & Following en blanc */
+}
+
+.profileStats span strong {
+  font-weight: bold;
+}
+
+.editButton {
+  background: transparent;
+  border: 1px solid #8899a6; /* Bordure grise */
+  color: white;
+  padding: 8px 15px;
+  border-radius: 20px;
+  font-size: 17px;
+  cursor: pointer;
+  transition: background 0.2s;
+  cursor: pointer;
+}
+
+.editButton:hover {
+  background: rgba(255, 255, 255, 0.1);
+
+}
+
+
+/* -----------------------------💬 Section des tweets */
 .tweetsContainer {
   margin-top: 20px;
   background-color: #222;
@@ -614,6 +789,7 @@
   background-color: #333;
   color: white;
 }
+
 /*---------------- 🔍 Pop-up de création de tweet ----------------- */
 .modalOverlay {
   position: fixed;
@@ -657,25 +833,7 @@
   margin-top: 10px;
 }
 
-.postButton {
-  background-color: #ffffff;
-  color: #000000;
-  border: none;
-  padding: 10px 20px;
-  font-size: 18px;
-  border-radius: 20px;
-  cursor: pointer;
-  width: 100%;
-  margin-top: 10px;
-  transition: 0.5s;
-}
 
-.postButton:hover {
-  background-color: #000000;
-  border: solid 1px #ffffff;
-  color: #ffffff;
-  transition: 0.5s;
-}
 
 .closeButton {
   background-color: #444;

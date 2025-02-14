@@ -167,7 +167,7 @@ export default function ProfilePage() {
           <div>
             <h1 className={styles.profileName}>{name}</h1>
             <p className={styles.profileUsername}>@{username}</p>
-            <p>{bio || "Ajoutez une bio..."}</p> {/* 🔥 Affichage de la bio */}
+            <p className={styles.profileBio}>{bio || "Ajoutez une bio..."}</p> {/* 🔥 Affichage de la bio */}
             <p className={styles.profileJoined}>
               📅 Joined {user?.createdAt ? new Date(user.createdAt).toLocaleString("fr-FR", { month: "long", year: "numeric" }) : "Date inconnue"}
             </p>
@@ -177,7 +177,7 @@ export default function ProfilePage() {
             </div>
           </div>
           <button className={styles.editButton} onClick={() => setIsEditing(true)}>
-            Éditer le profil
+            Edit profil
           </button>
         </div>
 
@@ -218,7 +218,6 @@ export default function ProfilePage() {
           <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
             <h2>Modifier le profil</h2>
             <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Nom" />
-            <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Identifiant" />
             <textarea value={bio} onChange={(e) => setBio(e.target.value)} placeholder="Bio"></textarea> {/* 🔥 Champ de bio */}
 
             <label>Photo de profil</label>

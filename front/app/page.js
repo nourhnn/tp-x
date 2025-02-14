@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import logo from "./logo.png";
+import logo from "@/public/logo.png";
 import styles from "./page.module.css";
 
 export default function Home() {
