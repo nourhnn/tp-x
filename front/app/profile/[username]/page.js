@@ -3,9 +3,9 @@
 import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Image from "next/image";
-import styles from "@/app/page.module.css";
-import Sidebar from "@/app/components/Sidebar";
-import SearchBar from "@/app/components/SearchBar";
+import styles from "../../page.module.css";
+import Sidebar from "../../components/Sidebar";
+import SearchBar from "../../components/SearchBar";
 
 export default function UserProfile() {
   const { username } = useParams(); // Récupère l'username depuis l'URL

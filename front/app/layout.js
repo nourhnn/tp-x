@@ -1,18 +1,12 @@
-import "./globals.css";
-import Sidebar from "./components/Sidebar";
-
-export const metadata = {
-  title: "MiaouX",
-  description: "Le réseau social inspiré de X",
-};
+"use client";
+import { SessionProvider } from "next-auth/react";
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="fr">
-      <body>
-        {children} {/* Chaque page aura juste son contenu */}
-      </body>
-    </html>
+    <SessionProvider>
+      <html lang="fr">
+        <body>{children}</body>
+      </html>
+    </SessionProvider>
   );
 }
-

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import styles from "@/app/page.module.css";
+import styles from "../page.module.css";
 
 export default function SearchBar({ currentUser }) { // 🔥 On récupère l'utilisateur connecté
   const [query, setQuery] = useState("");

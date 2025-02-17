@@ -20,7 +20,6 @@ const connectDB = async () => {
 };
 
 // Charger les modèles après la connexion
-import "../app/models/article";
 import "../app/models/user";
 
 export default connectDB;

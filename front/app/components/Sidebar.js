@@ -21,14 +21,17 @@ export default function Sidebar() {
         </Link>
         <nav className={styles.navLinks}>
           <Link href="/">🏠 Home</Link>
-          <Link href="/messages">📩 Messages</Link>
+          <Link href="/test-messages">📩 Messages</Link>
           <Link href="/profile">👤 Profile</Link>
+          <Link href="/settings">⚙️ Paramètres</Link> {/* 🔥 Ajout du lien vers les paramètres */}
         </nav>
       </div>
 
       <div className={styles.bottomSection}>
         <button className={styles.postButton}>Post</button>
-        <button className={styles.logoutButton} onClick={handleLogout}>Déconnexion</button>
+        <button onClick={() => signOut()} style={{ marginTop: "10px", padding: "5px 10px", background: "red", color: "white", border: "none", cursor: "pointer" }}>
+                    🚪 Déconnexion
+                  </button>
       </div>
     </div>
   );

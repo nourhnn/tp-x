@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react"; // ✅ Utilisation de NextAuth
 import Image from "next/image";
 import logo from "../../../public/logo.png";
 import styles from "../../page.module.css";
@@ -16,27 +17,28 @@ export default function LoginPage() {
     e.preventDefault();
     setError("");
 
-    const res = await fetch("/api/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
+    const res = await signIn("credentials", {
+      redirect: false, // ✅ Empêche la redirection automatique
+      email,
+      password,
     });
 
-    const data = await res.json();
-    console.log("🔍 Réponse API Login :", data);
+    console.log("🔍 Réponse API NextAuth :", res);
 
-    if (!res.ok || !data.token) {
-      setError(data.message || "Erreur inconnue");
+    if (res?.error) {
+      setError(res.error);
       return;
     }
 
+    console.log("✅ Connecté avec succès !");
+    router.push("/profile"); // 🔥 Redirection après connexion
+
     localStorage.setItem("token", data.token);
-    sessionStorage.setItem("tempToken", data.token); // 🔥 Stockage temporaire
+  await signIn("credentials", { token: data.token, redirect: false });
 
-    console.log("✅ Token stocké :", localStorage.getItem("token"));
-
-    router.push("/profile");
   };
+
+  
 
   return (
     <div className={styles.loginPage}>
