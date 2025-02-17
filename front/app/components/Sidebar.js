@@ -44,7 +44,7 @@ export default function Sidebar({ onNewTweet }) {
         <nav className={styles.navLinks}>
           <Link href="/">🏠 Home</Link>
           <Link href="/test-messages">📩 Messages</Link>
-          <Link href="/profile">👤 Profile</Link>
+          <Link href="/profile">👤 Profil</Link>
           <Link href="/settings">⚙️ Paramètres</Link> 
           {/* 🔥 Ajout du lien vers les paramètres */}
         </nav>

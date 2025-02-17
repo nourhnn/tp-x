@@ -9,7 +9,7 @@ import SearchBar from "../components/SearchBar";
 
 export default function ProfilePage() {
   const [user, setUser] = useState(null);
-  const [tweets, setTweets] = useState([]); // Liste des tweets
+  const [tweets, setTweets] = useState([]); // Liste des tweets de l'utilisateur connecté
   const [isEditing, setIsEditing] = useState(false);
   const [editingTweet, setEditingTweet] = useState(null);
   const [newTweetText, setNewTweetText] = useState("");
@@ -40,7 +40,7 @@ export default function ProfilePage() {
 
     const fetchUserData = async () => {
       try {
-        const res = await fetch(`/api/profile/${username}`, {
+        const res = await fetch(`/api/profile/me`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -56,7 +56,14 @@ export default function ProfilePage() {
         setUsername(data.user.username || "");
         setProfilePicture(data.user.profilePicture || "");
         setBanner(data.user.banner || "");
-        setBio(data.user.bio || ""); // 🔥 Ajout de la bio
+        setBio(data.user.bio || "");
+
+        // 🔹 Récupérer uniquement les tweets du profil connecté
+        const tweetsRes = await fetch(`/api/tweets/user/${data.user._id}`);
+        if (!tweetsRes.ok) throw new Error("Erreur lors de la récupération des tweets");
+
+        const tweetsData = await tweetsRes.json();
+        setTweets(tweetsData);
       } catch (error) {
         console.error("❌ Erreur serveur :", error);
         router.push("/");
@@ -64,69 +71,39 @@ export default function ProfilePage() {
     };
 
     fetchUserData();
-  }, [username, router]);
+  }, [router]);
 
-  const handleProfilePictureChange = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
+  const addTweet = async (newTweet) => {
+    if (!user) return; // Vérification que l'utilisateur est bien chargé
 
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onloadend = () => {
-      setProfilePicture(reader.result);
-    };
-  };
+    try {
+      const res = await fetch("/api/tweets", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: newTweet.text, image: newTweet.image, userId: user._id }),
+      });
 
-  const handleBannerChange = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
+      if (!res.ok) throw new Error("Erreur lors de la publication");
 
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onloadend = () => {
-      setBanner(reader.result);
-    };
-  };
-
-  const handleUpdateProfile = async () => {
-    const token = localStorage.getItem("token");
-
-    const body = JSON.stringify({
-      profilePicture,
-      banner,
-      name,
-      username,
-      bio, // 🔥 Ajout de la bio
-    });
-
-    console.log("📤 Données envoyées à /api/profile/update :", body); // 🔥 Vérifier ce qui est envoyé
-
-    const res = await fetch("/api/profile/update", {
-      method: "PUT",
-      headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-      body: body,
-    });
-
-    if (res.ok) {
-      const data = await res.json();
-      setUser(data.user);
-      setIsEditing(false);
-    } else {
-      console.error("Erreur lors de la mise à jour du profil");
+      const savedTweet = await res.json();
+      setTweets([savedTweet, ...tweets]);
+    } catch (error) {
+      console.error("Erreur lors de la publication :", error);
     }
   };
 
-  const addTweet = (newTweet) => {
-    const tweetWithDate = {
-      ...newTweet,
-      id: Date.now(),
-      createdAt: new Date().toLocaleString("fr-FR", { dateStyle: "short", timeStyle: "short" }),
-    };
-    setTweets([tweetWithDate, ...tweets]);
-  };
+  const deleteTweet = async (id) => {
+    try {
+      const res = await fetch(`/api/tweets/${id}`, {
+        method: "DELETE",
+      });
 
-  const deleteTweet = (id) => {
-    setTweets(tweets.filter(tweet => tweet.id !== id));
+      if (!res.ok) throw new Error("Erreur lors de la suppression");
+
+      setTweets(tweets.filter(tweet => tweet._id !== id));
+    } catch (error) {
+      console.error("Erreur lors de la suppression :", error);
+    }
   };
 
   const startEditingTweet = (tweet) => {
@@ -134,12 +111,25 @@ export default function ProfilePage() {
     setNewTweetText(tweet.text);
   };
 
-  const saveEditedTweet = () => {
-    setTweets(tweets.map(tweet => 
-      tweet.id === editingTweet.id ? { ...tweet, text: newTweetText } : tweet
-    ));
-    setEditingTweet(null);
-    setNewTweetText("");
+  const saveEditedTweet = async () => {
+    try {
+      const res = await fetch(`/api/tweets/${editingTweet._id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: newTweetText }),
+      });
+
+      if (!res.ok) throw new Error("Erreur lors de la modification");
+
+      setTweets(tweets.map(tweet =>
+        tweet._id === editingTweet._id ? { ...tweet, text: newTweetText } : tweet
+      ));
+
+      setEditingTweet(null);
+      setNewTweetText("");
+    } catch (error) {
+      console.error("Erreur lors de la modification :", error);
+    }
   };
 
   return (
@@ -167,18 +157,15 @@ export default function ProfilePage() {
           <div>
             <h1 className={styles.profileName}>{name}</h1>
             <p className={styles.profileUsername}>@{username}</p>
-            <p>{bio || "Ajoutez une bio..."}</p> {/* 🔥 Affichage de la bio */}
+            <p>{bio || "Ajoutez une bio..."}</p>
             <p className={styles.profileJoined}>
-              📅 Joined {user?.createdAt ? new Date(user.createdAt).toLocaleString("fr-FR", { month: "long", year: "numeric" }) : "Date inconnue"}
+              📅 Joined {user?.createdAt ? new Date(user.createdAt).toLocaleString("fr-FR", { month: "long", year: "numeric" }) : "?"}
             </p>
             <div className={styles.profileStats}>
               <span><strong>{following}</strong> Following</span>
               <span><strong>{followers}</strong> Followers</span>
             </div>
           </div>
-          <button className={styles.editButton} onClick={() => setIsEditing(true)}>
-            Éditer le profil
-          </button>
         </div>
 
         <div className={styles.tweetsContainer}>
@@ -186,8 +173,8 @@ export default function ProfilePage() {
             <p>Aucun Miaou pour l'instant</p>
           ) : (
             tweets.map((tweet) => (
-              <div key={tweet.id} className={styles.tweet}>
-                {editingTweet && editingTweet.id === tweet.id ? (
+              <div key={tweet._id} className={styles.tweet}>
+                {editingTweet && editingTweet._id === tweet._id ? (
                   <>
                     <textarea 
                       value={newTweetText} 
@@ -200,9 +187,9 @@ export default function ProfilePage() {
                   <>
                     <p>{tweet.text}</p>
                     {tweet.image && <img src={tweet.image} alt="Tweet" className={styles.tweetImage} />}
-                    <p className={styles.tweetDate}>{tweet.createdAt}</p>
+                    <p className={styles.tweetDate}>{new Date(tweet.createdAt).toLocaleString("fr-FR")}</p>
                     <button className={styles.editButton} onClick={() => startEditingTweet(tweet)}>✏️ Modifier</button>
-                    <button className={styles.deleteButton} onClick={() => deleteTweet(tweet.id)}>🗑️ Supprimer</button>
+                    <button className={styles.deleteButton} onClick={() => deleteTweet(tweet._id)}>🗑️ Supprimer</button>
                   </>
                 )}
               </div>
@@ -212,29 +199,6 @@ export default function ProfilePage() {
       </div>
 
       <SearchBar />
-      
-       {isEditing && (
-        <div className={styles.modal} onClick={() => setIsEditing(false)}>
-          <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-            <h2>Modifier le profil</h2>
-            <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Nom" />
-            <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Identifiant" />
-            <textarea value={bio} onChange={(e) => setBio(e.target.value)} placeholder="Bio"></textarea> {/* 🔥 Champ de bio */}
-
-            <label>Photo de profil</label>
-            <input type="file" accept="image/*" onChange={handleProfilePictureChange} />
-
-            <label>Bannière</label>
-            <input type="file" accept="image/*" onChange={handleBannerChange} />
-
-            <button onClick={handleUpdateProfile} className={styles.saveButton}>
-              Enregistrer
-            </button>
-
-            <button onClick={() => setIsEditing(false)}>Annuler</button>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
