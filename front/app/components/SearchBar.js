@@ -66,7 +66,8 @@ export default function SearchBar({ currentUser }) { // 🔥 On récupère l'uti
     setResults([]);
 
     // ✅ Redirection immédiate vers le profil
-    router.push(`/profile/${user.username}`);
+    router.push(`/profile/${user._id}`);
+
   };
 
   // ❌ Supprimer un utilisateur de la liste

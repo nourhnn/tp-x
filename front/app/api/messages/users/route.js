@@ -8,7 +8,9 @@ export async function GET() {
     await connectDB();
     console.log("✅ Connexion MongoDB réussie");
 
-    const users = await User.find().select("_id name username");
+    // ✅ Récupérer name, username et profilePicture correctement
+    const users = await User.find().select("_id name username profilePicture");
+
     console.log("✅ Utilisateurs récupérés :", users);
 
     return NextResponse.json({ users }, { status: 200 });

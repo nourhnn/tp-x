@@ -3,9 +3,14 @@ import connectDB from "../../utils/db";
 import User from "../../models/user";
 
 export async function GET(req) {
-  await connectDB();
-  
-  const { searchParams } = new URL(req.url);
+  try {
+    await connectDB();
+  } catch (error) {
+    console.error("Erreur de connexion à MongoDB :", error);
+    return NextResponse.json({ message: "Erreur de connexion à la base de données" }, { status: 500 });
+  }
+
+  const { searchParams } = new URL(req.nextUrl); // ✅ Changement ici
   const query = searchParams.get("q");
 
   if (!query) {
@@ -26,3 +31,4 @@ export async function GET(req) {
     return NextResponse.json({ message: "Erreur serveur" }, { status: 500 });
   }
 }
+

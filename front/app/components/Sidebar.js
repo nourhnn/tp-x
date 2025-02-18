@@ -1,16 +1,39 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { signOut } from "next-auth/react"; // ✅ Import de `signOut`
 import styles from "../../app/page.module.css"; 
 
-export default function Sidebar() {
+export default function Sidebar({ onNewTweet }) {
   const router = useRouter();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [tweetText, setTweetText] = useState("");
+  const [image, setImage] = useState(null);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
     router.push("/auth/login");
+  };
+
+  const handleImageChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setImage(URL.createObjectURL(file));
+    }
+  };
+
+  const handlePostTweet = () => {
+    if (tweetText.trim() === "") return;
+    
+    const newTweet = { text: tweetText, image, id: Date.now() };
+    onNewTweet(newTweet);
+    
+    setIsModalOpen(false);
+    setTweetText("");
+    setImage(null);
   };
 
   return (
@@ -28,11 +51,27 @@ export default function Sidebar() {
       </div>
 
       <div className={styles.bottomSection}>
-        <button className={styles.postButton}>Post</button>
-        <button onClick={() => signOut()} style={{ marginTop: "10px", padding: "5px 10px", background: "red", color: "white", border: "none", cursor: "pointer" }}>
-                    🚪 Déconnexion
-                  </button>
+        <button className={styles.postButton} onClick={() => setIsModalOpen(true)}>Poster un Miaou</button>
+        <button className={styles.logoutButton}onClick={() => signOut({ callbackUrl: "/auth/login" })}>Déconnexion</button>
       </div>
+
+      {isModalOpen && (
+        <div className={styles.modalOverlay}>
+          <div className={styles.modalContent}>
+            <h2>Poster un Miaou</h2>
+            <textarea
+              className={styles.tweetInput}
+              placeholder="Miaou Miaou ?"
+              value={tweetText}
+              onChange={(e) => setTweetText(e.target.value)}
+            />
+            <input type="file" accept="image/*" onChange={handleImageChange} />
+            {image && <img src={image} alt="Aperçu" className={styles.imagePreview} />}
+            <button className={styles.postButton} onClick={handlePostTweet}>Poster</button>
+            <button className={styles.closeButton} onClick={() => setIsModalOpen(false)}>Fermer</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

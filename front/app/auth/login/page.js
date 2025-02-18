@@ -14,32 +14,28 @@ export default function LoginPage() {
   const router = useRouter();
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
-
-    const res = await signIn("credentials", {
-      redirect: false, // ✅ Empêche la redirection automatique
-      email,
-      password,
-    });
-
-    console.log("🔍 Réponse API NextAuth :", res);
-
-    if (res?.error) {
-      setError(res.error);
-      return;
-    }
-
-    console.log("✅ Connecté avec succès !");
-    router.push("/profile"); // 🔥 Redirection après connexion
-
-    localStorage.setItem("token", data.token);
-  await signIn("credentials", { token: data.token, redirect: false });
-
-  };
-
+  e.preventDefault();
+  console.log('test');
   
+  setError("");
 
+  const res = await signIn("credentials", {
+    redirect: false, // ✅ Empêche la redirection automatique
+    email,
+    password,
+  });
+
+  console.log("🔍 Réponse API NextAuth :", res); // ✅ Vérifie ce que NextAuth renvoie
+
+  // ✅ Vérifie si l'authentification a échoué
+  if (res?.error) {
+    setError(res.error);
+    return;
+  }
+
+  console.log("✅ Connecté avec succès !");
+  router.push("/profile"); // 🔥 Redirection après connexion
+};
   return (
     <div className={styles.loginPage}>
       <Image src={logo} alt="MiaouX Logo" width={150} height={150} className={styles.loginLogo} />

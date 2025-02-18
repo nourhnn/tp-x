@@ -1,3 +1,4 @@
+
 /*--------------------------------------SIGNUP-------------------------------------*/
 
 
@@ -249,14 +250,19 @@
   padding: 20px;
 }
 
+.profilePage{
+  background-color: #000;
+}
+
 /* Conteneur principal */
 .container {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 90%;
+  width: 100%;
   max-width: 1300px;
   gap: 50px;
+  background-color: #000;
 }
 
 /* Logo */
@@ -482,8 +488,8 @@
 }
 
 .sidebar {
-  width: 300px;
-  height: 100vh;
+  width: 22rem;
+  height: 98vh;
   position: fixed;
   left: 0;
   top: 0;
@@ -492,6 +498,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between; /* Espace entre le haut et le bas */
+  border-right: 1px solid #222;
 }
 
 /* 📌 Décalage du reste de la page pour éviter la superposition avec la sidebar */
@@ -607,7 +614,8 @@
   color: white;
   background-color: rgb(0, 0, 0);
   max-width: 800px;
-  margin-left: 300px;
+  margin-left: 360px;
+  margin-top: -8px;
 }
 
 /* 🔹 Bannière */
@@ -634,7 +642,7 @@
   border: 4px solid black;
   position: absolute;
   top: 140px;
-  left: 29%;
+  left: 35%;
   transform: translateX(-50%);
 }
 

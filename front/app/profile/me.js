@@ -35,70 +35,30 @@ export default function ProfilePage() {
       return;
     }
   
-    const fetchUserData = async () => {
-      const token = localStorage.getItem("token") || sessionStorage.getItem("tempToken");
-  
-    //   if (!token) {
-    //     console.log("⚠️ Aucun token trouvé, redirection vers login.");
-    //     router.push("/auth/login");
-    //     return;
-    //   }
-  
-      try {
-        console.log("📡 Chargement du profil avec ID :", session?.user?.id);
-    
-        const res = await fetch(`/api/profile/${session.user.id}`, { 
-          headers: { Authorization: `Bearer ${token}` },
-        });
-  
-        console.log("🔍 Statut de la réponse :", res.status);
-    
-        if (!res.ok) {
-          console.error("❌ Erreur API Profil :", res.status);
-          router.push(res.status === 404 ? "/not-found" : "/");
-          return;
-        }
-  
-        const data = await res.json();
-        console.log("✅ Profil reçu :", data);
-  
-        if (data.user) {
-          setUser(data.user); // ✅ On met à jour l'utilisateur avec les données reçues
-          setName(data.user.name || "");
-          setUsername(data.user.username || "");
-          setProfilePicture(data.user.profilePicture || "");
-          setBanner(data.user.banner || "");
-          setBio(data.user.bio || "");
-        } else {
-          console.error("❌ Aucun utilisateur trouvé dans la réponse");
-        }
-  
-      } catch (error) {
-        console.error("❌ Erreur serveur :", error);
-        router.push("/");
-      }
-    };
-  
-    fetchUserData();
+    // ✅ Stocker les infos de l'utilisateur connecté
+    setUser({ ...data.user }); // 🔥 On force React à mettre à jour l'état
+    setName(data.user.name || "");
+    setUsername(data.user.username || "");
+    setProfilePicture(data.user.profilePicture || "");
+    setBanner(data.user.banner || "");
+    setBio(data.user.bio || "");
+
   }, [session, status, router]);
-  
   
 
   useEffect(() => {
-    if (status === "loading") return; // 🔄 Attendre que la session soit chargée
-    if (!session || !session.user) {
-      console.error("⚠️ Aucun utilisateur dans la session !");
+    if (!session?.user?.id) {
+      console.error("⚠️ Aucun ID utilisateur dans la session !");
       return;
     }
   
-  
     const token = localStorage.getItem("token") || sessionStorage.getItem("tempToken");
   
-    // if (!token) {
-    //   console.log("⚠️ Aucun token trouvé, redirection vers login.");
-    //   router.push("/auth/login");
-    //   return;
-    // }
+    if (!token) {
+      console.log("⚠️ Aucun token trouvé, redirection vers login.");
+      router.push("/auth/login");
+      return;
+    }
   
     const fetchUserData = async () => {
       try {

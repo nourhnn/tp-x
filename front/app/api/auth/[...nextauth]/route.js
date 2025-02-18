@@ -37,6 +37,20 @@ export const authOptions = {
   session: {
     strategy: "jwt",
   },
+  // callbacks: {
+  //   async jwt({ token, user }) {
+  //     if (user) {
+  //       token.id = user.id;
+  //       token.username = user.username;
+  //     }
+  //     return token;
+  //   },
+  //   async session({ session, token }) {
+  //     session.user.id = token.id;
+  //     session.user.username = token.username;
+  //     return session;
+  //   },
+  // },
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
@@ -50,7 +64,7 @@ export const authOptions = {
       session.user.username = token.username;
       return session;
     },
-  },
+  },  
   secret: process.env.NEXTAUTH_SECRET,
   pages: {
     signIn: "/auth/login",
