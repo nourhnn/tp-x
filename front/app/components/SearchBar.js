@@ -125,4 +125,4 @@ export default function SearchBar({ currentUser }) { // 🔥 On récupère l'uti
       )}
     </div>
   );
-}
+} 
